@@ -3,27 +3,30 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class TaskA {
-    public static void main(String[] args) throws IOException {
-        final String delimiter = ",";
+    final static String delimiter = ",";
+    final static String alphabet = "abcdefghijklmnopqrstuvwxyz";
+    public static void main(String[] args) {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(bufferedReader.readLine());
-        String[] record;
-        for (int i = 0; i < N; i++) {
-            record = bufferedReader.readLine().split(delimiter);
-            long fioValue = getFIOValue(record[0], record[1], record[2]);
-            int digitSum = getDigitSum(record[3], record[4]);
-            digitSum *= 64;
-            int alphabetValue = getAlphabetValue(record[0].toLowerCase());
-            alphabetValue *= 256;
-            int sum = (int) (fioValue + digitSum + alphabetValue);
-            String s1 = "000" + Integer.toHexString(sum).toUpperCase();
-            System.out.print(s1.substring(Math.max(s1.length() - 3, 0), s1.length()) + " ");
+        int N = 0;
+        try {
+            N = Integer.parseInt(bufferedReader.readLine());
+            for (int i = 0; i < N; i++) {
+                String[] record = bufferedReader.readLine().split(delimiter);
+                int fioValue = getFIOValue(record[0], record[1], record[2]);
+                int digitSum = getDigitSum(record[3], record[4]);
+                int alphabetValue = getAlphabetValue(record[0].toLowerCase());
+                int sum = fioValue + digitSum * 64 + alphabetValue * 256;
+                String result = "000" + Integer.toHexString(sum).toUpperCase();
+                System.out.print(result.substring(Math.max(result.length() - 3, 0)) + " ");
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
-    public static long getFIOValue(String surname, String name, String patronymic) {
+    public static int getFIOValue(String surname, String name, String patronymic) {
         String commonString = surname + name + patronymic;
-        return commonString.chars().distinct().count();
+        return (int) commonString.chars().distinct().count();
     }
 
     private static int getDigitSum(String day, String month) {
@@ -37,7 +40,6 @@ public class TaskA {
     }
 
     private static int getAlphabetValue(String surname) {
-        final String alphabet = "abcdefghijklmnopqrstuvwxyz";
         return alphabet.indexOf(surname.charAt(0)) + 1;
     }
 }
